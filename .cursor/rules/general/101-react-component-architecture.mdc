@@ -1,0 +1,209 @@
+---
+description: 
+globs: *.tsx
+alwaysApply: false
+---
+---
+description: React Component Architecture - Client Components and Server Components in React 19
+globs: *.tsx, *.ts
+alwaysApply: false
+---
+# React Component Architecture
+
+Since React 19 and NextJS 13, React architecture introduces two complementary component types: **Server Components** and **Client Components**. This "hybrid" approach offers unprecedented flexibility in React application development.
+
+## Server Components
+
+### Concept and Benefits
+
+Server Components are components that run **exclusively on the server**. They allow you to:
+
+1. **Make backend queries directly** in your components
+2. **Reduce the JavaScript bundle size** sent to the client
+3. **Access server resources** (databases, file system)
+
+### Characteristics
+
+- Server Components are always `async`
+- They cannot use React hooks
+- They don't have access to browser APIs (`window`, `document`, etc.)
+- They cannot handle user interactivity (events, state)
+
+### Usage Example
+
+```tsx
+// A Server Component (no need for 'use server')
+export default async function UserList() {
+  // Direct database access
+  const users = await prisma.user.findMany();
+  
+  return (
+    <div>
+      <h1>User List</h1>
+      {users.map((user) => (
+        <div key={user.id}>{user.name}</div>
+      ))}
+    </div>
+  );
+}
+```
+
+### Specific Features
+
+```tsx
+import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
+
+// Redirect to another page
+redirect('/login');
+
+// Show the `not-found.tsx` page
+notFound()
+```
+
+## Client Components
+
+### Concept and Benefits
+
+Client Components are interactive components that are pre-rendered on the server and then **hydrated** on the client. They allow you to:
+
+1. **Create interactive interfaces** with state management and events
+2. **Use React hooks** (useState, useEffect, etc.)
+3. **Access browser APIs** (localStorage, geolocation, etc.)
+
+### Characteristics
+
+- Must begin with the `'use client'` directive
+- Can use React hooks and manage local state
+- Are first rendered on the server then hydrated on the client side
+- Can create hydration errors if used incorrectly
+
+### Usage Example
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+
+export const Counter = () => {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button 
+        type="button" 
+        onClick={() => setCount((currentCount) => currentCount + 1)}
+      >
+        Click me
+      </button>
+    </div>
+  );
+}
+```
+
+## Hybrid Architecture and Best Practices
+
+### Component Composition
+
+Modern React architecture allows you to seamlessly combine Server and Client Components:
+
+```tsx
+// Server Component parent
+export default async function ProductPage({ productId }) {
+  // Backend query
+  const product = await getProductDetails(productId);
+  
+  return (
+    <div>
+      <h1>{product.name}</h1>
+      <ProductDetails product={product} />
+      {/* Client Component for interactivity */}
+      <AddToCartButton productId={product.id} />
+    </div>
+  );
+}
+
+// In another file
+'use client';
+
+const AddToCartButton = ({ productId }) => {
+  const [isAdding, setIsAdding] = useState(false);
+  
+  // Interactive logic...
+}
+```
+
+### Conditional Logic
+
+Always use early-return patterns for conditional rendering to improve readability and maintainability:
+
+```tsx
+// Preferred: Early return pattern
+const UserProfile = ({ user, isLoading }) => {
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+  
+  if (!user) {
+    return <NotFoundMessage />;
+  }
+  
+  return (
+    <div>
+      <h1>{user.name}</h1>
+      <p>{user.email}</p>
+    </div>
+  );
+};
+
+// Avoid: Nested conditionals
+const UserProfileBad = ({ user, isLoading }) => {
+  return (
+    <div>
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : user ? (
+        <>
+          <h1>{user.name}</h1>
+          <p>{user.email}</p>
+        </>
+      ) : (
+        <NotFoundMessage />
+      )}
+    </div>
+  );
+};
+```
+
+### Important Rules
+
+1. Server Component files should not contain the `'use client'` directive
+2. Client Components should be named using kebab-case (e.g., `add-to-cart-button.tsx`)
+3. To use browser APIs in Client Components, verify that the code runs on the client side:
+
+```tsx
+'use client';
+
+import { useEffect, useState } from 'react';
+
+export function LocalStorageComponent() {
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  if (!isClient) {
+    return <div>Loading...</div>
+  }
+  
+  // Now we can safely use localStorage
+  const data = localStorage.getItem('myData');
+  
+  return <div>{data}</div>;
+}
+```
+
+4. Prefer Server Components by default and only use Client Components when interactivity is necessary
+

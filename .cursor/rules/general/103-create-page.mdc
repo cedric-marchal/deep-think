@@ -1,0 +1,136 @@
+---
+description: 
+globs: *.tsx
+alwaysApply: false
+---
+---
+description: EXPLAIN how to create a page
+globs: *.tsx
+---
+### Context
+
+* Creating a page must ALWAYS follow these rules.
+
+### Rules
+
+- The function name must match the file name. For example, if the file is blog/page.tsx, the exported function should be named BlogPage.
+- The top-level returned element of each page must be a <main> tag.
+- Pages must be responsive and designed primarily for three screen types: desktop, tablet, and mobile.
+- Every page and its components must be structured and written to be as SEO-friendly as possible, facilitating maximum discoverability by search engines. Use semantic HTML, proper heading hierarchy, and accessibility tags (aria-*) where needed.
+- Metadata must be defined using the Metadata type from next.
+- If the page is located in the (public) directory, define all fields: title, description, keywords, alternates.canonical, openGraph, twitter, ...
+- If the page is located in the (protected) directory, only define the title field.
+- Each page must include a <Script> tag embedding a schema.org JSON-LD object:
+- If in the (public) directory, define a JSON-LD script based on the page content type (WebPage, Article, Product, etc.).
+- If in the (protected) directory, do not include any structured data.
+- Always use `import type` when importing types (such as Metadata from next or WebSite from schema-dts). Never import types without explicitly marking them as types.
+
+### Example
+
+A public page:
+
+```tsx
+import { env } from "@/lib/env";
+
+import type { Metadata } from "next";
+import type { WebSite } from "schema-dts";
+
+import Script from "next/script";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(env.NEXT_PUBLIC_BASE_URL),
+  title: `Title | ${env.NEXT_PUBLIC_APP_NAME}`,
+  description: "Meta Description",
+  keywords: ["keyword1", "keyword2", "keyword3"],
+  alternates: {
+    canonical: `${env.NEXT_PUBLIC_BASE_URL}/url`,
+  },
+  openGraph: {
+    title: `Title | ${env.NEXT_PUBLIC_APP_NAME}`,
+    description: "description",
+    siteName: env.NEXT_PUBLIC_APP_NAME,
+    url: env.NEXT_PUBLIC_BASE_URL,
+    images: [
+      {
+        url: "/images/default-open-graph.png",
+        width: 1200,
+        height: 630,
+        alt: `Default Open Graph image for ${env.NEXT_PUBLIC_APP_NAME}`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Title | ${env.NEXT_PUBLIC_APP_NAME}`,
+    description: "description",
+    images: {
+      url: "/images/default-open-graph.png",
+      width: 1200,
+      height: 630,
+      alt: `Default Open Graph image for ${env.NEXT_PUBLIC_APP_NAME}`,
+    },
+  },
+};
+
+export default function TitlePage() {
+  const schemaOrg: WebSite = {
+    "@type": "WebSite",
+    name: env.NEXT_PUBLIC_APP_NAME,
+    url: env.NEXT_PUBLIC_BASE_URL,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${env.NEXT_PUBLIC_BASE_URL}/search?q={search_term_string}`,
+    },
+    description: "description",
+    headline: "title", // TODO: add title
+    image: `${env.NEXT_PUBLIC_BASE_URL}/images/default-open-graph.png`,
+    sameAs: [
+      "https://www.facebook.com/your-facebook-page",
+      "https://twitter.com/your-twitter-handle",
+      // Add other social media links here
+    ],
+    publisher: {
+      "@type": "Organization",
+      name: env.NEXT_PUBLIC_APP_NAME,
+      logo: {
+        "@type": "ImageObject",
+        url: `${env.NEXT_PUBLIC_BASE_URL}/images/logo-app-name.png`,
+      },
+    },
+  };
+
+  return (
+    <main>
+      {/* Components */}
+
+      <Script
+        id="schema-org-title"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(schemaOrg),
+        }}
+      />
+    </main>
+  );
+}
+``` 
+
+A protected page (Dashboard and Admin pages):
+
+```tsx
+import { env } from "@/lib/env";
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Title | ${env.NEXT_PUBLIC_APP_NAME}`,
+};
+
+export default function TitlePage() {
+  return (
+    <main>
+      {/* Components */}
+    </main>
+  );
+}
+``` 

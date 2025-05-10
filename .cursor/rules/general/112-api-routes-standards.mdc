@@ -1,0 +1,117 @@
+---
+description: 
+globs: *.ts
+alwaysApply: false
+---
+# API Routes Standards
+
+## Description
+
+These standards define the structure and implementation of API routes in our Next.js application.
+
+## Standards
+
+### API Routes Structure
+
+- API routes must be placed in the `app/api/` directory following Next.js App Router structure
+- Each feature should have its own folder (e.g., `app/api/register/`)
+- Use `route.ts` files to implement HTTP methods
+
+### Data Validation
+
+- Use Zod for validating incoming data
+- Define clear schemas with error messages in French
+- Place validation schemas inside the route file or in a separate file if reusable
+
+### Error Handling
+
+- Use utility functions like `handleApiError` to uniformly handle errors
+- Validate user existence with `throwErrorIfUserExists` or similar functions
+- Always use `throw new Error()` or custom exceptions rather than directly returning NextResponse objects in case of errors
+- Let the `handleApiError` function in the catch block handle the conversion of errors to NextResponse
+- Return appropriate HTTP codes and consistent error messages
+
+### Security
+
+- Hash passwords with bcrypt (minimum cost factor of 12)
+- Validate and sanitize all user inputs
+- Limit returned information with `select` in Prisma queries
+
+### Response Format
+
+- Always use NextResponse to structure responses
+- Include appropriate HTTP status
+- Structure response data consistently
+
+## Implementation Example
+
+Here is an example of an API route for user registration:
+
+```typescript
+import { prisma } from "@/lib/prisma";
+import { throwErrorIfUserExists } from "@/utils/api/exists-error/throw-error-if-user-exists";
+import { handleApiError } from "@/utils/api/handle-api-error";
+import bcrypt from "bcryptjs";
+import { NextResponse } from "next/server";
+import { z } from "zod";
+
+const RegisterSchema = z.object({
+  firstName: z.string().trim().min(1, "Le prénom est requis"),
+  lastName: z.string().trim().min(1, "Le nom est requis"),
+  email: z.string().email("Veuillez saisir une adresse e-mail valide").trim(),
+  password: z
+    .string()
+    .trim()
+    .min(1, "Le mot de passe doit contenir au moins 1 caractères"),
+});
+
+export async function POST(request: Request) {
+  try {
+    const formData = await request.formData();
+
+    const userData = RegisterSchema.parse({
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
+      email: formData.get("email"),
+      password: formData.get("password"),
+    });
+
+    await throwErrorIfUserExists(userData.email);
+
+    const hashedPassword = await bcrypt.hash(userData.password, 12);
+
+    const newUser = await prisma.user.create({
+      data: {
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        hashedPassword,
+        role: "CUSTOMER",
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        user: newUser,
+      },
+      { status: 201 }
+    );
+  } catch (error: unknown) {
+    return handleApiError(error);
+  }
+}
+```
+
+## References
+
+- [Next.js Route Handlers Documentation](mdc:https:/nextjs.org/docs/app/building-your-application/routing/route-handlers)
+- [Zod Documentation](mdc:https:/zod.dev)
+- [Prisma Documentation](mdc:https:/www.prisma.io/docs)

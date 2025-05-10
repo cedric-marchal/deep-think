@@ -1,0 +1,130 @@
+---
+description: Comprehensive guide to NextJS 15 architecture, backend methods, and routing system.
+globs: *.ts, *.tsx
+---
+
+# NextJS Architecture
+
+## Context
+
+* NextJS 15 provides a powerful framework that handles both backend functionality and routing.
+* This guide covers how to effectively use NextJS backend methods and routing system.
+* All routing must be handled within the `app` directory.
+
+## Backend Methods
+
+### Headers
+
+Enable you to get the header of the request.
+
+```tsx
+import { headers } from 'next/headers'
+ 
+export default async function Page() {
+  const headersList = await headers()
+  const userAgent = headersList.get('user-agent')
+}
+```
+
+### Cookies
+
+Enable you to get the cookie of the request.
+
+```tsx
+import { cookies } from 'next/headers'
+ 
+export default async function Page() {
+  const cookieStore = await cookies()
+  const theme = cookieStore.get('theme')
+  return '...'
+}
+```
+
+To set a cookie, you must be in an [api-route.mdc](mdc:.cursor/rules/api-route.mdc) or [server-actions.mdc](mdc:.cursor/rules/server-actions.mdc):
+
+```tsx
+'use server'
+ 
+import { cookies } from 'next/headers'
+ 
+export async function create(data) {
+  const cookieStore = await cookies()
+ 
+  cookieStore.set('name', 'lee')
+  // or
+  cookieStore.set('name', 'lee', { secure: true })
+  // or
+  cookieStore.set({
+    name: 'name',
+    value: 'lee',
+    httpOnly: true,
+    path: '/',
+  })
+}
+```
+
+## Routing System
+
+NextJS provides a file-based routing system that automatically creates routes based on files in the `app` directory.
+
+### `page.tsx`
+
+The template for page is located in [npag.code-snippets](mdc:.vscode/npag.code-snippets) and defines a page. You can also use [npagl.code-snippets](mdc:.vscode/npagl.code-snippets) for having a default layout. Here is how pages work:
+
+* `/app/users/page.tsx` will route to `/users`
+
+The params is ASYNC and you must use [next.ts](mdc:src/types/next.ts) to use the params with PageParams.
+
+Example:
+
+```tsx
+import type { PageParams } from "@/types/next";
+
+// You always need to use PageParams
+export default async function RoutePage(props: PageParams<{ userId: string }>) {
+  // You need to await searchParams
+  const searchParams = await props.searchParams;
+  const page = searchParams.page;
+
+  // You need to await params
+  const params = await props.params;
+  const userId = params.userId;
+
+  return // ...
+}
+```
+
+### `layout.tsx`
+
+The template for the layout is located in [nlay.code-snippets](mdc:.vscode/nlay.code-snippets) and defines the layout that will be applied to every child of a route.
+
+* `/app/users/layout.tsx` will take a children prop and every route will have the layout applied, for example:
+  * `/users/1`
+  * `/users`
+  * `/users/dashboard/test`
+
+The params is ASYNC and you must use [next.ts](mdc:src/types/next.ts) to use the params with LayoutParams.
+
+### `error.tsx`
+
+The template can be found in [nerr.code-snippets](mdc:.vscode/nerr.code-snippets) and defines the Error page. When a child route gets an error, the `error.tsx` will be displayed. It's the nearest error in the tree that will be displayed. It's a good practice to always add an error component.
+
+* `/app/users/error.tsx` will show an error for every route that doesn't have a nearer error handler, all children of `/users`
+
+### `loading.tsx`
+
+The template can be found in [nloa.code-snippets](mdc:.vscode/nloa.code-snippets) and defines the Loading page.
+
+When a child is a [server-components.mdc](mdc:.cursor/rules/server-components.mdc) and is loading, the `loading.tsx` page will be displayed.
+
+* `/app/users/loading.tsx` will show a loader for every route that doesn't have a nearer loading component, all children of `/users`
+
+## Integration Between Backend and Routing
+
+NextJS provides a seamless integration between backend functionality and routing through Server Components, API Routes, and Server Actions. This allows you to:
+
+1. Access backend methods directly in your page and layout components
+2. Create dedicated API endpoints for more complex backend operations
+3. Use server actions for form submissions and data mutations
+
+This architecture enables a full-stack development experience within a single framework, eliminating the need for separate backend and frontend codebases. 

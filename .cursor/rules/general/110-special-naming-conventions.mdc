@@ -1,0 +1,108 @@
+---
+description: Special naming conventions for various code elements
+globs: *.tsx,*.ts,*.prisma
+alwaysApply: false
+---
+# Special Naming Conventions
+
+This document outlines special naming conventions for various types of code elements to ensure consistency across the codebase.
+
+## Boolean Naming Conventions
+
+### Summary
+ENFORCE consistent boolean naming conventions by prefixing boolean variables with "is", "has", "should", or "can".
+
+### Details
+All boolean variables should follow these naming conventions:
+- Use "is" prefix for state conditions (e.g., `isLoading`, `isVisible`, `isActive`)
+- Use "has" prefix for possession conditions (e.g., `hasPermission`, `hasChildren`)
+- Use "should" prefix for recommendations (e.g., `shouldUpdate`, `shouldDisplay`)
+- Use "can" prefix for capability conditions (e.g., `canEdit`, `canDelete`)
+
+#### Examples
+```typescript
+// ✅ Good
+const isLoading = true;
+const hasError = false;
+const shouldRefresh = true;
+const canSubmit = false;
+
+// ❌ Bad
+const loading = true;
+const error = false;
+const refresh = true;
+const submit = false;
+```
+
+#### Justification
+This naming convention:
+1. Makes code more readable by clearly identifying boolean variables
+2. Improves code search and refactoring capabilities
+3. Makes variable purpose self-documenting
+4. Creates consistency across the codebase
+
+## JavaScript Event Naming and Typing Conventions
+
+### Summary
+ENFORCE consistent naming and typing for JavaScript/TypeScript event parameters to ensure code clarity and type safety.
+
+### Details
+All event handling in JavaScript/TypeScript should follow these conventions:
+
+#### 1. Event Parameter Naming
+- Always name event parameters as `event` and not abbreviated forms like `e` or `evt`
+- This improves readability and makes code more consistent and searchable
+
+#### 2. Event Parameter Typing
+- Always explicitly type event parameters using TypeScript
+- Use the appropriate event type that matches the source element and event type
+- Common event types include:
+  - `React.FormEvent<HTMLFormElement>` for form submissions
+  - `React.ChangeEvent<HTMLInputElement>` for input changes
+  - `React.MouseEvent<HTMLButtonElement>` for button clicks
+  - `React.KeyboardEvent<HTMLElement>` for keyboard events
+
+#### Examples
+```typescript
+// ✅ Good
+const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+  // handle form submission
+};
+
+const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const value = event.target.value;
+  // handle input change
+};
+
+const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  // handle button click
+};
+
+// ❌ Bad
+const handleSubmit = (e) => {
+  e.preventDefault();
+  // handle form submission
+};
+
+const handleChange = (evt: any) => {
+  const value = evt.target.value;
+  // handle input change
+};
+
+const onClick = (e: React.MouseEvent) => {
+  // Not specific enough type
+};
+```
+
+#### Justification
+This convention:
+1. Improves code readability by using consistent, descriptive parameter names
+2. Enhances type safety through explicit typing
+3. Enables better IDE autocompletion and documentation
+4. Makes codebase more maintainable and consistent
+
+## Implementation
+- Apply in all new code
+- Gradually refactor existing code to match these conventions
+- Consider adding ESLint rules to enforce these conventions automatically 

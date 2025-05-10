@@ -1,0 +1,68 @@
+---
+description: How use Shadcn/UI to add styles to our applications
+globs: *.tsx, *.ts
+alwaysApply: false
+---
+---
+description: How use Shadcn/UI to add styles to our applications
+globs: *.tsx, *.ts
+---
+## Context
+
+* We use Shadcn/UI to style our application.
+
+## Rules
+
+- You must use Shadcn UI for components.
+- You must use Tailwind CSS for styling.
+- You must install any ShadcnUI missing component with `pnpm dlx shadcn@latest add <component-name />`
+- When using the Button component from shadcn/ui, always explicitly define the type attribute. If no type is provided, default to type="button" to prevent unintended form submissions.
+
+## Component Usage Guidelines
+
+### ✅ Safe to use freely (server-friendly, lightweight, no hydration needed)
+
+- `button`
+- `badge`
+- `card`
+- `separator`
+- `avatar`
+- `label`
+- `skeleton`
+- `aspect-ratio`
+- `progress` (static values only)
+- `alert` (non-interactive)
+- `typography` (e.g. `h1`, `p`, `blockquote`)
+
+Use these components wherever needed. They are static, accessible, and do not require client-side JavaScript.
+
+---
+
+### ⚠️ Use with moderation (requires `use client`, interactive)
+
+- `dialog`
+- `popover`
+- `tooltip`
+- `dropdown-menu`
+- `sheet`
+- `tabs`
+- `accordion`
+- `collapsible`
+- `hover-card`
+- `toast`
+
+Use only when the UX justifies interactivity. Avoid excessive nesting of these components to limit hydration cost.
+
+---
+
+### 🔥 Use only when absolutely necessary (heavy client-side logic)
+
+- `combobox`
+- `select`
+- `calendar` / `date-picker`
+- `navigation-menu`
+- `resizable`
+- `command`
+- `context-menu`
+
+These components are powerful but come with higher cost. Only use them if the use case truly requires it. Prefer native or simplified custom alternatives when possible.

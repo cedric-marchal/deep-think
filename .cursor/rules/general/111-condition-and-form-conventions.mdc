@@ -1,0 +1,306 @@
+---
+description: 
+globs: *.tsx,*.ts
+alwaysApply: false
+---
+ ---
+description: 
+globs: *.tsx,*.ts
+alwaysApply: false
+---
+# UI Pattern Conventions: Conditions & Forms
+
+## Part 1: Condition Style & Structure
+
+### Context
+- This section governs the style and structure of all conditional statements (if, else if, else, switch, ternary).
+- It enforces consistent use of braces, discourages nested conditionals, and promotes flat, readable logic.
+- These rules apply to all environments (frontend, backend, shared code) and must be followed in all new code and during refactors.
+
+### Requirements
+
+1. Mandatory Use of Braces
+- Always use curly braces {} for if, else if, and else blocks—even for single-line statements.
+- Do not omit braces under any circumstances.
+
+#### Examples
+```typescript
+// ✅ Good
+if (isAdmin) {
+  grantAccess();
+}
+
+if (!hasPermission) {
+  return;
+}
+
+// ❌ Bad
+if (isAdmin) grantAccess();
+if (!hasPermission) return;
+```
+
+2. Avoid Nested Conditionals
+- Avoid if inside if inside if. Always strive for flat, linear, and early-return logic.
+- Use guard clauses to exit early and reduce indentation depth.
+
+#### Examples
+```typescript
+// ✅ Good
+const isAdmin = (user) => {
+  if (!user) {
+    return false;
+  }
+
+  if (user.role !== "admin") {
+    return false;
+  }
+
+  return true;
+};
+
+// ❌ Bad
+const isAdmin = (user) => {
+  if (user) {
+    if (user.role === "admin") {
+      return true;
+    }
+  }
+
+  return false;
+};
+```
+
+3. One Responsibility per Conditional
+- Keep conditions focused and expressive. Break complex checks into named booleans or helper functions.
+
+#### Examples
+```typescript
+// ✅ Good
+const isAuthenticated = !!sessionToken;
+const isPageProtected = protectedRoutes.includes(currentPath);
+
+if (isPageProtected && !isAuthenticated) {
+  redirectToLogin();
+}
+
+// ❌ Bad
+if (protectedRoutes.includes(currentPath) && !sessionToken) {
+  redirectToLogin();
+}
+```
+
+4. Prefer Early Returns Over Else Blocks
+- When possible, return early instead of wrapping logic in else.
+
+```typescript
+// ✅ Good
+if (!user) {
+  return null;
+}
+
+return <UserProfile user={user} />;
+
+// ❌ Bad
+if (user) {
+  return <UserProfile user={user} />;
+} else {
+  return null;
+}
+```
+
+5. Example Patterns
+
+```typescript
+// ✅ Good
+const canEditProfile = (user) => {
+  if (!user) {
+    return false;
+  }
+
+  if (user.role !== "editor" && user.role !== "admin") {
+    return false;
+  }
+
+  return true;
+};
+
+// ❌ Bad
+const canEditProfile = (user) => {
+  if (user) {
+    if (user.role === "editor" || user.role === "admin") {
+      return true;
+    }
+  }
+
+  return false;
+};
+```
+
+## Part 2: Form Conventions
+
+### Context
+- In this project, forms are built using Client Components in Next.js 13+ and React 19.
+- We use controlled/uncontrolled inputs with form submission handled via native <form> elements and FormData.
+- We rely on UI primitives such as <Input>, <Label>, <Button>, and modals/dialogs from our design system (@/components/ui/...).
+
+### Why a Form Rule?
+- Consistency: Unified structure across all forms makes code easier to read, maintain, and scale.
+- User Feedback: Built-in notification support ensures feedback on success or failure.
+- Server Communication: All forms use fetch with native FormData for better file support and progressive enhancement.
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Plus, X } from 'lucide-react';
+
+import { showResponseNotification } from '@/utils/api/showResponseNotification';
+
+export const CarouselImageCreateModal = () => {
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    
+    const formData = new FormData(event.currentTarget);
+
+    const response = await fetch('/api/carousel-image', {
+      method: 'POST',
+      body: formData,
+    });
+
+    await showResponseNotification({
+      response,
+      successMessage: "L'image du carrousel a été créée avec succès.",
+    });
+
+    if (response.ok) {
+      // Optionally refresh or close modal
+    }
+  };
+
+  return (
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+      <AlertDialogTrigger className="flex items-center gap-2 rounded-lg bg-pink-600 p-3 text-white transition hover:bg-pink-700">
+        <Plus className="h-4 w-4" />
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <div className="flex items-center justify-between">
+          <AlertDialogTitle>{`Ajouter une nouvelle image`}</AlertDialogTitle>
+          <Button type="button" onClick={() => setIsOpen(false)} className="p-3">
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+
+        <AlertDialogDescription>
+          {`Veuillez renseigner l'URL de l'image et la balise alt que vous souhaitez créer.`}
+        </AlertDialogDescription>
+
+        <form className="flex flex-col gap-4" onSubmit={onSubmit}>
+          <div className="mx-2 flex flex-col gap-4">
+            <Label htmlFor="file">Sélectionnez une image</Label>
+            <Input id="file" type="file" name="file" />
+          </div>
+
+          <div className="mx-2 flex flex-col gap-4">
+            <Label htmlFor="altText">Balise Alt de l'image</Label>
+            <Input id="altText" type="text" name="altText" placeholder="Balise Alt de l'image" />
+          </div>
+
+          <Button type="submit" className="mt-2">
+            Ajouter l'image au carrousel
+          </Button>
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+```
+
+### Form Creation Rules
+- Client Only: All forms must be inside a Client Component with 'use client' at the top of the file.
+- Submit Handling: Use onSubmit={async (e) => { ... }} with event.preventDefault() and FormData to handle submissions.
+- UI Components: Use standardized components from the design system:
+  - <Input>, <Label>, <Button> from @/components/ui/
+  - Wrap forms inside <AlertDialog> if it's a modal form.
+- Notification Feedback: Always use showResponseNotification with the response object to display success/error messages.
+- API Interaction:
+  - Use fetch with method: POST and body: new FormData(...).
+  - Do not stringify form data manually when handling file inputs.
+- File Naming: All form components must use kebab-case (e.g. carousel-image-create-modal.tsx).
+- Accessibility:
+  - Always associate inputs and labels using htmlFor and id.
+  - Use placeholder text only as a hint, not as a replacement for labels.
+
+### Form Conditional Logic Best Practices
+
+When combining form handling with conditional logic, follow these guidelines:
+
+1. Form Validation Logic
+```tsx
+// ✅ Good
+const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+
+  const formData = new FormData(event.currentTarget);
+  const email = formData.get('email');
+  
+  if (!email || !email.includes('@')) {
+    return setError('Please enter a valid email');
+  }
+  
+  // Continue with submission
+};
+
+// ❌ Bad
+const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+  const formData = new FormData(event.currentTarget);
+  const email = formData.get('email') as string;
+  
+  if (email && email.includes('@')) {
+    // Continue with submission
+  } else {
+    setError('Please enter a valid email');
+  }
+};
+```
+
+2. Conditional Form Rendering
+```tsx
+// ✅ Good
+return (
+  <form onSubmit={onSubmit}>
+    {!isLoggedIn && (
+      <div className="form-group">
+        <Label htmlFor="email">Email</Label>
+        <Input id="email" name="email" type="email" required />
+      </div>
+    )}
+    
+    <Button type="submit">Submit</Button>
+  </form>
+);
+
+// ❌ Bad - nested conditionals make logic hard to follow
+return (
+  <form onSubmit={onSubmit}>
+    {user ? (
+      user.isVerified ? (
+        <VerifiedUserForm />
+      ) : (
+        <UnverifiedUserForm />
+      )
+    ) : (
+      <GuestUserForm />
+    )}
+  </form>
+);
+```

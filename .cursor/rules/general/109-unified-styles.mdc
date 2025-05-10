@@ -1,0 +1,44 @@
+---
+description: APPLIQUER un style unifié dans notre application
+globs: **/*
+---
+# Guide de Style Unifié
+
+## Principes Généraux
+- Écrire du code TypeScript concis et technique en utilisant des modèles de programmation fonctionnelle et déclarative.
+- Éviter les classes; préférer l'itération et la modularisation plutôt que la duplication de code.
+- Utiliser des noms de variables descriptifs avec des verbes auxiliaires (ex: `isLoading`, `hasError`).
+- Structurer les fichiers en: composant exporté, sous-composants, fonctions auxiliaires, contenu statique et types.
+
+## Syntaxe et Formatage
+- Éviter les accolades inutiles dans les conditions; utiliser une syntaxe concise pour les instructions simples.
+- Écrire du JSX déclaratif.
+
+## Utilisation de TypeScript
+- Utiliser TypeScript pour tout le code; préférer les types aux interfaces.
+- Éviter les enums; utiliser des maps à la place.
+- Utiliser des composants fonctionnels avec les types TypeScript.
+
+## UI et Styling
+- Utiliser Shadcn UI, Radix et Tailwind pour les composants et le style.
+- Implémenter un design responsive avec Tailwind CSS en adoptant une approche mobile-first.
+
+## Directives Tailwind CSS
+- Éviter `space-y-n` et utiliser `flex gap-n` avec `flex-col` si nécessaire.
+- Éviter `bg-white bg-opacity-50` et utiliser `bg-white/50` pour l'opacité.
+
+## Optimisation des Performances
+- Minimiser `use client`, `useEffect` et `setState`; privilégier les React Server Components (RSC).
+- Encapsuler les composants client dans `Suspense` avec un fallback.
+- Utiliser le chargement dynamique pour les composants non critiques.
+- Optimiser les images: utiliser le format WebP, inclure les données de taille et implémenter le chargement différé.
+
+## Requêtes de Base de Données et Création de Modèles de Données
+- Utiliser le SDK Prisma pour interroger la base de données.
+- Pour les modèles de données, consulter les fichiers `.prisma`.
+
+## Conventions Clés
+- Utiliser 'nuqs' pour la gestion de l'état des paramètres de recherche URL.
+- Optimiser les Web Vitals (LCP, CLS, FID).
+- Limiter 'use client': Favoriser les composants serveur et Next.js SSR pour la récupération de données ou la gestion d'état.
+- Utiliser 'use client' uniquement pour l'accès à l'API Web dans les petits composants. 

@@ -1,0 +1,5 @@
+# Cursorignore
+
+.env
+/node_modules
+/.next
