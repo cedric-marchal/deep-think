@@ -19,6 +19,10 @@ export const Header = () => {
       href: "/",
     },
     {
+      label: "Philosophers",
+      href: "/philosophers",
+    },
+    {
       label: "Sign in",
       href: "/sign-in",
     },
