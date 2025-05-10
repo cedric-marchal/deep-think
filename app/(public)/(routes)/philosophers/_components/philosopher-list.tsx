@@ -15,11 +15,11 @@ export const PhilosopherList = ({ philosophers }: PhilosopherListProps) => {
             className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
           >
             <PhilosopherCard
-              id={philosopher.id}
-              name={philosopher.name}
-              era={philosopher.era}
               imageUrl={philosopher.imageUrl}
+              name={philosopher.name}
+              slug={philosopher.slug}
               description={philosopher.description}
+              era={philosopher.era}
             />
           </div>
         ))}

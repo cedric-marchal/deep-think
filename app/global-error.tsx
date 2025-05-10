@@ -33,7 +33,7 @@ export default function GlobalErrorPage({
                 Something went wrong
               </CardTitle>
               <CardDescription>
-                We're sorry, but we encountered a critical problem
+                We&apos;re sorry, but we encountered a critical problem
               </CardDescription>
             </CardHeader>
             <Separator />

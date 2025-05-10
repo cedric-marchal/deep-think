@@ -31,7 +31,7 @@ export default function ErrorPage({
             Something went wrong
           </CardTitle>
           <CardDescription>
-            We're sorry, but we encountered an unexpected problem
+            We&apos;re sorry, but we encountered an unexpected problem
           </CardDescription>
         </CardHeader>
         <Separator />

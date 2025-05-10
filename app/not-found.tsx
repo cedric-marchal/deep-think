@@ -33,14 +33,15 @@ export default function NotFoundPage() {
             404 - Page not found
           </CardTitle>
           <CardDescription>
-            The page you're looking for doesn't exist or has been moved
+            The page you&apos;re looking for doesn&apos;t exist or has been
+            moved
           </CardDescription>
         </CardHeader>
         <Separator />
         <CardContent className="space-y-4 pt-6">
           <p className="text-muted-foreground text-center">
-            We couldn't find the page you were looking for. Please check the URL
-            and try again, or return to the home page.
+            We couldn&apos;t find the page you were looking for. Please check
+            the URL and try again, or return to the home page.
           </p>
         </CardContent>
         <CardFooter className="flex justify-center">

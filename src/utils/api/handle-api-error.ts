@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ZodError, type ZodIssue } from "zod";
+import { ZodError } from "zod";
 
 export class NotFoundError extends Error {
   constructor(message: string) {
@@ -49,7 +49,7 @@ export function handleApiError(error: unknown): NextResponse {
     return new NextResponse(
       JSON.stringify({
         type: "ValidationError",
-        errors: error.errors.reverse().map((err: ZodIssue) => err.message),
+        message: error.errors[0]?.message || "Validation error",
       }),
       { status: 400, headers: { "Content-Type": "application/json" } },
     );

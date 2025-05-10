@@ -5,7 +5,7 @@ import type { WebSite } from "schema-dts";
 
 import Script from "next/script";
 
-import { Philosopher } from "@/prisma/generated/prisma";
+import { prisma } from "@/src/lib/prisma";
 import { PhilosopherList } from "./_components/philosopher-list";
 
 export const metadata: Metadata = {
@@ -49,41 +49,7 @@ export const metadata: Metadata = {
 export default async function PhilosophersPage() {
   await new Promise((resolve) => setTimeout(resolve, 5000));
 
-  const defaultPhilosophers: Philosopher[] = [
-    {
-      id: "socrates",
-      name: "Socrates",
-      slug: "socrates",
-      era: "Classical Greece",
-      imageUrl: "/images/philosophers/socrates.jpg",
-      description:
-        "Known for the Socratic method and his contributions to Western philosophy. He believed that the unexamined life is not worth living.",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: "plato",
-      name: "Plato",
-      slug: "plato",
-      era: "Classical Greece",
-      imageUrl: "/images/philosophers/plato.jpg",
-      description:
-        "Founder of the Academy in Athens. His writings explored justice, beauty, equality, and many other themes.",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: "aristotle",
-      name: "Aristotle",
-      slug: "aristotle",
-      era: "Classical Greece",
-      imageUrl: "/images/philosophers/aristotle.jpg",
-      description:
-        "Student of Plato who established the Lyceum. His work covered physics, biology, zoology, metaphysics, ethics, and more.",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  ];
+  const philosophers = await prisma.philosopher.findMany();
 
   const schemaOrg: WebSite = {
     "@type": "WebSite",
@@ -118,7 +84,7 @@ export default async function PhilosophersPage() {
         Explore our collection of philosophers and their ideas.
       </p>
 
-      <PhilosopherList philosophers={defaultPhilosophers} />
+      <PhilosopherList philosophers={philosophers} />
 
       <Script
         id="schema-org-philosophers"
