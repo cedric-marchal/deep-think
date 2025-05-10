@@ -16,9 +16,9 @@ export default function PhilosophersLoading() {
         <div className="mx-auto flex w-full max-w-7xl flex-wrap justify-center gap-6 px-4">
           {Array(3)
             .fill(0)
-            .map((_, i) => (
+            .map((_, index: number) => (
               <div
-                key={i}
+                key={index}
                 className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
                 style={{ minWidth: "300px" }}
               >

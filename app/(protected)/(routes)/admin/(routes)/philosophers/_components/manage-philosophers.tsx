@@ -1,6 +1,7 @@
 "use client";
 
 import type { Philosopher } from "@/prisma/generated/prisma";
+import { Avatar, AvatarImage } from "@/src/components/ui/avatar";
 import { Button } from "@/src/components/ui/button";
 import {
   Card,
@@ -39,6 +40,7 @@ export const ManagePhilosophers = ({
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Image</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Era</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -47,6 +49,11 @@ export const ManagePhilosophers = ({
             <TableBody>
               {philosophers.map((philosopher: Philosopher) => (
                 <TableRow key={philosopher.id}>
+                  <TableCell>
+                    <Avatar className="">
+                      <AvatarImage src={philosopher.imageUrl} />
+                    </Avatar>
+                  </TableCell>
                   <TableCell className="font-medium">
                     {philosopher.name}
                   </TableCell>

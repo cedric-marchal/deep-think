@@ -6,6 +6,16 @@ const nextConfig: NextConfig = {
   transpilePackages: ["@t3-oss/env-nextjs", "@t3-oss/env-core"],
   images: {
     formats: ["image/avif", "image/webp"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+      },
+    ],
   },
 };
 

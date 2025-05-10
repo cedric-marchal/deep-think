@@ -121,7 +121,7 @@ export const AddPhilosopherModal = () => {
             <Textarea
               id="description"
               name="description"
-              placeholder="Brief description of the philosopher and their contributions"
+              placeholder="Describe the philosopher's key ideas, contributions to philosophy, and historical significance"
               className="min-h-[100px] break-words whitespace-pre-wrap"
               required
               disabled={isLoading}

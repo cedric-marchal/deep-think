@@ -41,6 +41,8 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
+  //main();
+
   const schemaOrg: WebSite = {
     "@type": "WebSite",
     name: env.NEXT_PUBLIC_APP_NAME,

@@ -15,10 +15,6 @@ type NavLink = {
 export const Header = () => {
   const navLinks: NavLink[] = [
     {
-      label: "Home",
-      href: "/",
-    },
-    {
       label: "Philosophers",
       href: "/philosophers",
     },
