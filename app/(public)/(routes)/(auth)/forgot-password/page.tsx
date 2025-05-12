@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ForgotPasswordPage() {
+export default async function ForgotPasswordPage() {
   const schemaOrg: WithContext<WebPage> = {
     "@context": "https://schema.org",
     "@type": "WebPage",

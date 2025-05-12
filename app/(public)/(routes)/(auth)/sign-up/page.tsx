@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function SignUpPage() {
+export default async function SignUpPage() {
   const schemaOrg: WithContext<WebPage> = {
     "@context": "https://schema.org",
     "@type": "WebPage",

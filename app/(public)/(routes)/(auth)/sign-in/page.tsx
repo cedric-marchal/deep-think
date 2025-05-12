@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function SignInPage() {
+export default async function SignInPage() {
   const schemaOrg: WithContext<WebPage> = {
     "@context": "https://schema.org",
     "@type": "WebPage",

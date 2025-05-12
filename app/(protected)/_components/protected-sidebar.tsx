@@ -9,7 +9,7 @@ import {
 
 import Link from "next/link";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import type { ElementType } from "react";
 
@@ -27,6 +27,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/src/components/ui/sidebar";
+import { signOut } from "@/src/lib/auth-client";
 
 type NavigationItem = {
   title: string;
@@ -35,6 +36,7 @@ type NavigationItem = {
 };
 
 export const ProtectedSidebar = () => {
+  const router = useRouter();
   const pathname = usePathname();
 
   const { toggleSidebar } = useSidebar();
@@ -54,6 +56,11 @@ export const ProtectedSidebar = () => {
       icon: LayoutDashboardIcon,
     },
   ];
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.refresh();
+  };
 
   return (
     <Sidebar side="left" collapsible="icon" className="h-screen border-r">
@@ -120,11 +127,9 @@ export const ProtectedSidebar = () => {
       <SidebarFooter className="mt-auto border-t">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton type="button" asChild>
-              <Link href="/profile">
-                <User2 className="h-4 w-4" />
-                <span>Profil</span>
-              </Link>
+            <SidebarMenuButton type="button" onClick={handleSignOut}>
+              <User2 className="h-4 w-4" />
+              <span>Profil</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
