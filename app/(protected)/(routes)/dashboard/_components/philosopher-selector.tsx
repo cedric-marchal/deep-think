@@ -57,11 +57,11 @@ export const PhilosopherSelector = () => {
           {philosophers.map((philosopher) => (
             <button
               key={philosopher.id}
+              type="button"
               onClick={() => handleSelect(philosopher.id)}
               className={`hover:bg-muted/50 flex w-full items-center gap-3 p-3 text-left transition ${
                 selectedId === philosopher.id ? "bg-muted" : ""
               }`}
-              type="button"
             >
               <div className="relative h-10 w-10 overflow-hidden rounded-full">
                 <Image
