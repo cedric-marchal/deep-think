@@ -40,10 +40,7 @@ export const PhilosopherCard = ({
   return (
     <MotionArticle {...cardAnimation}>
       <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
-        <Link
-          href={`/philosophers/${slug}`}
-          className="relative block h-72 w-full overflow-hidden transition-transform duration-500 hover:scale-105"
-        >
+        <div className="relative block h-72 w-full overflow-hidden transition-transform duration-500 hover:scale-105">
           <Image
             src={imageUrl}
             alt={name}
@@ -52,7 +49,7 @@ export const PhilosopherCard = ({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 opacity-0 transition-opacity duration-300 hover:opacity-100" />
-        </Link>
+        </div>
         <CardHeader className="pb-2">
           <MotionHeading3
             className="hover:text-primary text-xl font-bold transition-colors"
@@ -60,9 +57,7 @@ export const PhilosopherCard = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <Link href={`/philosophers/${slug}`}>
-              {truncateString(name, 20)}
-            </Link>
+            {truncateString(name, 50)}
           </MotionHeading3>
           <MotionParagraph
             className="text-muted-foreground text-sm"
@@ -83,7 +78,7 @@ export const PhilosopherCard = ({
             {truncateString(description, 150)}
           </MotionParagraph>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="mb-6">
           {isLoggedIn ? (
             <Button asChild className="w-full" type="button">
               <Link href={`/dashboard/chat/${slug}`}>

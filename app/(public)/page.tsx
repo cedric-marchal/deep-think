@@ -5,17 +5,36 @@ import type { WebSite } from "schema-dts";
 
 import Script from "next/script";
 
+import { prisma } from "@/src/lib/prisma";
+
+import { CtaSection } from "./_components/home/cta-section";
+import { FeaturedPhilosophers } from "./_components/home/featured-philosophers";
+import { FeaturesSection } from "./_components/home/features-section";
+import { HeroSection } from "./_components/home/hero-section";
+import { PricingSection } from "./_components/home/pricing-section";
+import { TestimonialsSection } from "./_components/home/testimonials-section";
+
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_BASE_URL),
-  title: `Home | ${env.NEXT_PUBLIC_APP_NAME}`,
-  description: "description",
-  keywords: ["keywords"],
+  title: `DeepThink - Chat with Philosophers | ${env.NEXT_PUBLIC_APP_NAME}`,
+  description:
+    "Engage with history's greatest philosophical minds through AI. DeepThink lets you chat with Socrates, Nietzsche, Kant, and many more to explore their ideas and perspectives.",
+  keywords: [
+    "philosophy",
+    "AI chat",
+    "philosophers",
+    "learn philosophy",
+    "Socrates",
+    "Nietzsche",
+    "Kant",
+  ],
   alternates: {
     canonical: `${env.NEXT_PUBLIC_BASE_URL}/`,
   },
   openGraph: {
-    title: `Home | ${env.NEXT_PUBLIC_APP_NAME}`,
-    description: "description",
+    title: `DeepThink - Chat with Philosophers | ${env.NEXT_PUBLIC_APP_NAME}`,
+    description:
+      "Engage with history's greatest philosophical minds through AI. DeepThink lets you chat with Socrates, Nietzsche, Kant, and many more to explore their ideas and perspectives.",
     siteName: env.NEXT_PUBLIC_APP_NAME,
     url: env.NEXT_PUBLIC_BASE_URL,
     images: [
@@ -29,8 +48,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `Home | ${env.NEXT_PUBLIC_APP_NAME}`,
-    description: "description",
+    title: `DeepThink - Chat with Philosophers | ${env.NEXT_PUBLIC_APP_NAME}`,
+    description:
+      "Engage with history's greatest philosophical minds through AI. DeepThink lets you chat with Socrates, Nietzsche, Kant, and many more to explore their ideas and perspectives.",
     images: {
       url: "/images/default-open-graph.png",
       width: 1200,
@@ -40,8 +60,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
-  //main();
+export default async function HomePage() {
+  const philosophers = await prisma.philosopher.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 6,
+  });
 
   const schemaOrg: WebSite = {
     "@type": "WebSite",
@@ -51,14 +76,10 @@ export default function HomePage() {
       "@type": "SearchAction",
       target: `${env.NEXT_PUBLIC_BASE_URL}/search?q={search_term_string}`,
     },
-    description: "description",
-    headline: "Home", // TODO: add title
+    description:
+      "Engage with history's greatest philosophical minds through AI. DeepThink lets you chat with Socrates, Nietzsche, Kant, and many more to explore their ideas and perspectives.",
+    headline: "DeepThink - Chat with Philosophers",
     image: `${env.NEXT_PUBLIC_BASE_URL}/images/default-open-graph.png`,
-    sameAs: [
-      "https://www.facebook.com/your-facebook-page",
-      "https://twitter.com/your-twitter-handle",
-      // Add other social media links here
-    ],
     publisher: {
       "@type": "Organization",
       name: env.NEXT_PUBLIC_APP_NAME,
@@ -70,8 +91,13 @@ export default function HomePage() {
   };
 
   return (
-    <main className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
-      <h1>Hello World</h1>
+    <main className="flex min-h-screen flex-col items-center">
+      <HeroSection />
+      <FeaturedPhilosophers philosophers={philosophers} />
+      <FeaturesSection />
+      <PricingSection />
+      <TestimonialsSection />
+      <CtaSection />
 
       <Script
         id="schema-org-home"
