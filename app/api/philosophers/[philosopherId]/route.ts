@@ -8,10 +8,10 @@ import {
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { philosopherId: string } },
+  { params }: { params: Promise<{ philosopherId: string }> },
 ) {
   try {
-    const philosopherId = params.philosopherId;
+    const { philosopherId } = await params;
 
     const philosopher = await prisma.philosopher.findUnique({
       where: {

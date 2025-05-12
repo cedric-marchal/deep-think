@@ -58,7 +58,7 @@ export const AddPhilosopherModal = () => {
       setIsOpen(false);
 
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error("An unexpected error occurred");
     } finally {
       setIsLoading(false);

@@ -12,12 +12,17 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
   appName: env.NEXT_PUBLIC_APP_NAME,
+  baseURL: env.NEXT_PUBLIC_BASE_URL,
+  secret: env.BETTER_AUTH_SECRET,
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url }) => {
       const userData = await prisma.user.findUnique({
         where: {
           email: user.email,
+        },
+        select: {
+          id: true,
         },
       });
 

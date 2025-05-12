@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import type { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 
+import type { PhilosophicalEra, Prisma } from "@/prisma/generated/prisma";
 import { prisma } from "@/src/lib/prisma";
 
 import { ManagePhilosophers } from "./_components/manage-philosophers";
@@ -15,20 +16,20 @@ export const metadata: Metadata = {
 };
 
 type AdminPageProps = {
-  params: Record<string, string>;
-  searchParams: SearchParams;
+  params: Promise<Record<string, string>>;
+  searchParams: Promise<SearchParams>;
 };
 
 export default async function AdminPage({ searchParams }: AdminPageProps) {
   // Parse search params using the cache
-  await philosophersCache.parse(searchParams);
+  await philosophersCache.parse(await searchParams);
 
   // Get filters directly from the cache
   const name = philosophersCache.get("name");
   const era = philosophersCache.get("era");
 
   // Build the database query based on filters
-  const where: any = {};
+  const where: Prisma.PhilosopherWhereInput = {};
 
   if (name) {
     where.name = {
@@ -38,7 +39,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   }
 
   if (era && era !== "all") {
-    where.era = era;
+    where.era = era as PhilosophicalEra;
   }
 
   console.log("Query filters:", { name, era });

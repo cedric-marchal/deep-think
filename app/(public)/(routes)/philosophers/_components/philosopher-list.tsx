@@ -40,7 +40,7 @@ export const PhilosopherList = ({
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          Try adjusting your filters to find what you're looking for.
+          Try adjusting your filters to find what you&apos;re looking for.
         </MotionParagraph>
       </MotionDiv>
     );

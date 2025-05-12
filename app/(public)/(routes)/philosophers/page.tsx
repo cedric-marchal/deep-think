@@ -1,6 +1,7 @@
 import { env } from "@/src/lib/env";
 import { Suspense } from "react";
 
+import type { PhilosophicalEra, Prisma } from "@/prisma/generated/prisma";
 import type { Metadata } from "next";
 import type { WebSite, WithContext } from "schema-dts";
 
@@ -63,12 +64,12 @@ export const metadata: Metadata = {
 export default async function PhilosophersPage({
   searchParams,
 }: {
-  searchParams: Record<string, string | string[] | undefined>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const { name, eras } = philosopherFilterParamsCache.parse(searchParams);
+  const { name, eras } = philosopherFilterParamsCache.parse(await searchParams);
 
   // Build the query with filters
-  const where: any = {};
+  const where: Prisma.PhilosopherWhereInput = {};
 
   if (name) {
     where.name = {
@@ -79,7 +80,7 @@ export default async function PhilosophersPage({
 
   if (eras && eras.length > 0) {
     where.era = {
-      in: eras,
+      in: eras as PhilosophicalEra[],
     };
   }
 

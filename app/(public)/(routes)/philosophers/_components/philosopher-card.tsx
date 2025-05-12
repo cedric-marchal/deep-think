@@ -80,7 +80,7 @@ export const PhilosopherCard = ({
             animate={{ opacity: 1 }}
             transition={{ delay: 0.25 }}
           >
-            {truncateString(description, 100)}
+            {truncateString(description, 150)}
           </MotionParagraph>
         </CardContent>
         <CardFooter>

@@ -3,7 +3,7 @@
 import { Button } from "@/src/components/ui/button";
 
 export default function PhilosophersError({
-  error,
+  error: _error, // eslint-disable-line @typescript-eslint/no-unused-vars
   reset,
 }: {
   error: Error & { digest?: string };
