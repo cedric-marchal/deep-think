@@ -32,10 +32,12 @@ export const ForgotPasswordForm = () => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
+    const emailValue = formData.get("email") as string;
 
     await authClient.forgetPassword(
       {
-        email: formData.get("email") as string,
+        email: emailValue,
+        redirectTo: "/reset-password",
       },
       {
         onRequest: () => {
@@ -43,12 +45,12 @@ export const ForgotPasswordForm = () => {
         },
         onSuccess: () => {
           setIsLoading(false);
-          setEmail(formData.get("email") as string);
+          setEmail(emailValue);
           setIsSuccess(true);
-          //router.push("/connexion");
           router.refresh();
         },
         onError: (ctx: { error: { message: string } }) => {
+          console.log(ctx.error.message);
           toast.error(ctx.error.message);
           setIsLoading(false);
         },

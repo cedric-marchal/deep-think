@@ -5,6 +5,8 @@ import type { WebPage, WithContext } from "schema-dts";
 
 import Script from "next/script";
 
+import { getUserSession } from "@/src/lib/auth-session";
+import { redirect } from "next/navigation";
 import { SignInForm } from "./_components/sign-in-form";
 
 export const metadata: Metadata = {
@@ -43,6 +45,12 @@ export const metadata: Metadata = {
 };
 
 export default async function SignInPage() {
+  const userSession = await getUserSession();
+
+  if (userSession) {
+    redirect("/dashboard");
+  }
+
   const schemaOrg: WithContext<WebPage> = {
     "@context": "https://schema.org",
     "@type": "WebPage",

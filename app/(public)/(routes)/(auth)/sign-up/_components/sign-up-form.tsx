@@ -15,7 +15,7 @@ import {
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 
-import { signUp } from "@/src/lib/auth-client";
+import { signIn, signUp } from "@/src/lib/auth-client";
 import { Eye, EyeOff, Lock, Mail, User, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -41,8 +41,13 @@ export const SignUpForm = () => {
         onRequest: () => {
           setIsLoading(true);
         },
-        onSuccess: () => {
-          router.push("/connexion");
+        onSuccess: async () => {
+          await signIn.email({
+            email: formData.get("email") as string,
+            password: formData.get("password") as string,
+          });
+
+          toast.success("Verification email sent");
           router.refresh();
         },
         onError: (ctx: { error: { message: string } }) => {

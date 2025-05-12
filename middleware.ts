@@ -4,41 +4,28 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (
-    pathname.includes("/sign-in") ||
-    pathname.includes("/sign-up") ||
-    pathname.includes("/forgot-password")
-  ) {
-    const sessionCookie = getSessionCookie(request);
+  // Skip the pages that allow both authenticated and unauthenticated access
+  if (pathname.includes("/reset-password")) {
+    const hasToken = request.nextUrl.searchParams.has("token");
 
-    if (sessionCookie) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+    // If no token in URL, redirect to forgot-password
+    if (!hasToken) {
+      return NextResponse.redirect(new URL("/forgot-password", request.url));
     }
 
     return NextResponse.next();
   }
 
-  if (pathname.includes("/dashboard") || pathname.includes("/admin")) {
+  if (pathname.includes("/verification-success")) {
+    // 1. Check if user is authenticated
     const sessionCookie = getSessionCookie(request);
 
-    if (!sessionCookie) {
-      const url = new URL("/sign-in", request.url);
-      return NextResponse.redirect(url);
-    }
+    // 2. Check if user has a verification token in the URL
+    const hasVerificationToken = request.nextUrl.searchParams.has("token");
 
-    if (pathname.includes("/admin")) {
-      const response = await fetch(
-        `${request.nextUrl.origin}/api/auth/check-admin`,
-        {
-          headers: {
-            cookie: request.headers.get("cookie") || "",
-          },
-        },
-      );
-
-      if (!response.ok) {
-        return NextResponse.redirect(new URL("/dashboard", request.url));
-      }
+    // 3. If not authenticated or no token, redirect to sign-in
+    if (!sessionCookie || !hasVerificationToken) {
+      return NextResponse.redirect(new URL("/sign-in", request.url));
     }
 
     return NextResponse.next();
