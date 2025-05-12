@@ -74,25 +74,14 @@ enum UserRole {
 }
 
 model Philosopher {
-  id              String           @id @default(cuid())
-  name            String           @unique
-  slug            String           @unique
-  era             PhilosophicalEra
-  imageUrl        String
-  description     String
-  birthDate       DateTime
-  deathDate       DateTime?
-  birthPlace      String
-  deathPlace      String?
-  schoolOfThought String
-  notableWorks    String[]
-  mainIdeas       String[]
-  influences      String[]
-  influenced      String[]
-  quotes          String[]
-  wikipediaUrl    String
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  id          String           @id @default(cuid())
+  name        String           @unique
+  slug        String           @unique
+  era         PhilosophicalEra
+  imageUrl    String
+  description String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 }
 
 enum PhilosophicalEra {

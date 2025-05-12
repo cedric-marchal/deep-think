@@ -37,6 +37,7 @@ type NavigationItem = {
 
 export const ProtectedSidebar = () => {
   const router = useRouter();
+
   const pathname = usePathname();
 
   const { toggleSidebar } = useSidebar();
@@ -59,7 +60,7 @@ export const ProtectedSidebar = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    router.refresh();
+    router.push("/sign-in");
   };
 
   return (
