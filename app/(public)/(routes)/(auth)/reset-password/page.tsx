@@ -54,7 +54,7 @@ export default async function ResetPasswordPage({
   const userSession = await getUserSession();
 
   if (userSession) {
-    redirect("/dashboard");
+    redirect("/dashboard/chat");
   }
 
   const resolvedParams = await searchParams;

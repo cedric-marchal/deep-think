@@ -1,9 +1,11 @@
 import { Button } from "@/src/components/ui/button";
 import { Card, CardContent } from "@/src/components/ui/card";
 import { Separator } from "@/src/components/ui/separator";
-import Link from "next/link";
 
-const PricingCheckMark = ({ children }: { children: React.ReactNode }) => (
+import Link from "next/link";
+import type { ReactNode } from "react";
+
+const PricingCheckMark = ({ children }: { children: ReactNode }) => (
   <li className="flex items-center">
     <svg
       className="text-primary mr-2 h-4 w-4"

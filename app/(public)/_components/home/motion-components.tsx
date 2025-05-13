@@ -60,15 +60,3 @@ export const MotionMain = ({ children, ...props }: MotionDivProps) => (
 export const MotionBadge = ({ children, ...props }: MotionDivProps) => (
   <motion.span {...props}>{children}</motion.span>
 );
-
-export const MotionButton = ({ children, ...props }: MotionDivProps) => (
-  <motion.button {...props}>{children}</motion.button>
-);
-
-export const MotionUl = ({ children, ...props }: MotionDivProps) => (
-  <motion.ul {...props}>{children}</motion.ul>
-);
-
-export const MotionLi = ({ children, ...props }: MotionDivProps) => (
-  <motion.li {...props}>{children}</motion.li>
-);

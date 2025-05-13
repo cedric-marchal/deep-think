@@ -16,7 +16,7 @@ import { TestimonialsSection } from "./_components/home/testimonials-section";
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_BASE_URL),
-  title: `DeepThink - Chat with Philosophers | ${env.NEXT_PUBLIC_APP_NAME}`,
+  title: `Chat with Philosophers | ${env.NEXT_PUBLIC_APP_NAME}`,
   description:
     "Engage with history's greatest philosophical minds through AI. DeepThink lets you chat with Socrates, Nietzsche, Kant, and many more to explore their ideas and perspectives.",
   keywords: [
@@ -61,6 +61,8 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
+  //main();
+
   const philosophers = await prisma.philosopher.findMany({
     orderBy: {
       createdAt: "desc",

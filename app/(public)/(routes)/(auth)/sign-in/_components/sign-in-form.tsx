@@ -41,7 +41,7 @@ export const SignInForm = () => {
           setIsLoading(true);
         },
         onSuccess: () => {
-          router.push("/dashboard");
+          router.push("/dashboard/chat");
           router.refresh();
         },
         onError: (ctx: { error: { message: string } }) => {

@@ -19,6 +19,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  chats         Chat[]
 
   @@map("user")
 }
@@ -82,6 +83,7 @@ model Philosopher {
   description String
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
+  chats       Chat[]
 }
 
 enum PhilosophicalEra {
@@ -101,4 +103,31 @@ enum PhilosophicalEra {
   EARLY_CONTEMPORARY // 1920-1960 (Logical Positivism, Phenomenology)
   POSTMODERN // 1960-2000 (Deconstruction, Post-structuralism)
   CONTEMPORARY // 2000-present
+}
+
+model Chat {
+  id            String        @id @default(cuid())
+  name          String
+  userId        String
+  philosopherId String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  philosopher   Philosopher   @relation(fields: [philosopherId], references: [id], onDelete: Cascade)
+  messages      ChatMessage[]
+}
+
+model ChatMessage {
+  id        String          @id @default(cuid())
+  content   String
+  role      ChatMessageRole
+  chatId    String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  chat      Chat            @relation(fields: [chatId], references: [id], onDelete: Cascade)
+}
+
+enum ChatMessageRole {
+  USER
+  ASSISTANT
 }

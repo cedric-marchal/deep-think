@@ -51,7 +51,7 @@ export default async function ForgotPasswordPage() {
   const userSession = await getUserSession();
 
   if (userSession) {
-    redirect("/dashboard");
+    redirect("/dashboard/chat");
   }
 
   const schemaOrg: WithContext<WebPage> = {

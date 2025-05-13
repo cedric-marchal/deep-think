@@ -48,7 +48,7 @@ export default async function SignInPage() {
   const userSession = await getUserSession();
 
   if (userSession) {
-    redirect("/dashboard");
+    redirect("/dashboard/chat");
   }
 
   const schemaOrg: WithContext<WebPage> = {
