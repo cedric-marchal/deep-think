@@ -1,7 +1,7 @@
 import { SidebarProvider } from "@/src/components/ui/sidebar";
 import { ProtectedSidebar } from "./_components/protected-sidebar";
 
-import { getUserSession } from "@/src/lib/auth-session";
+import { getCurrentSession } from "@/src/lib/auth-session";
 import { prisma } from "@/src/lib/prisma";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
@@ -11,15 +11,15 @@ export default async function ProtectedLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
-  const userSession = await getUserSession();
+  const currentSession = await getCurrentSession();
 
-  if (!userSession) {
+  if (!currentSession) {
     redirect("/sign-in");
   }
 
   const chats = await prisma.chat.findMany({
     where: {
-      userId: userSession.id,
+      userId: currentSession.user.id,
     },
     include: {
       philosopher: true,

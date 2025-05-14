@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import Script from "next/script";
 import type { WebPage, WithContext } from "schema-dts";
 
-import { getUserSession } from "@/src/lib/auth-session";
+import { getCurrentSession } from "@/src/lib/auth-session";
 import { ResetPasswordForm } from "./_components/reset-password-form";
 
 export const metadata: Metadata = {
@@ -51,9 +51,9 @@ export default async function ResetPasswordPage({
 }: {
   searchParams: Promise<{ token?: string }>;
 }) {
-  const userSession = await getUserSession();
+  const currentSession = await getCurrentSession();
 
-  if (userSession) {
+  if (currentSession) {
     redirect("/dashboard/chat");
   }
 

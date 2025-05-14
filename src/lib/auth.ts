@@ -1,5 +1,6 @@
 import { env } from "@/src/lib/env";
 import { prisma } from "@/src/lib/prisma";
+import { stripe } from "@/src/lib/stripe";
 
 import { ResetPasswordEmail } from "@/src/components/emails/reset-password-email";
 import { resend } from "@/src/lib/resend";
@@ -43,6 +44,35 @@ export const auth = betterAuth({
       });
     },
   },
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          try {
+            const customer = await stripe.customers.create({
+              email: user.email,
+              name: user.name,
+              metadata: {
+                userId: user.id,
+              },
+            });
 
+            if (!customer.id) {
+              throw new Error("Failed to create Stripe customer");
+            }
+
+            await prisma.user.update({
+              where: { id: user.id },
+              data: {
+                stripeCustomerId: customer.id,
+              },
+            });
+          } catch (error) {
+            console.error("Failed to create Stripe customer:", error);
+          }
+        },
+      },
+    },
+  },
   plugins: [nextCookies()],
 });

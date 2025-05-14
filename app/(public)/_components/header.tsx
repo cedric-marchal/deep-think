@@ -4,7 +4,7 @@ import { cn } from "@/src/lib/utils";
 import { ModeToggle } from "@/src/components/mode-toggle";
 import { MobileMenu } from "./mobile-menu";
 
-import type { UserSession } from "@/src/lib/auth-session";
+import type { currentSession } from "@/src/lib/auth-session";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -15,10 +15,10 @@ type NavLink = {
 };
 
 type HeaderProps = {
-  userSession: UserSession | null;
+  currentSession: currentSession | null;
 };
 
-export const Header = ({ userSession }: HeaderProps) => {
+export const Header = ({ currentSession }: HeaderProps) => {
   const navLinksWithoutSession: NavLink[] = [
     {
       label: "Philosophers",
@@ -45,7 +45,9 @@ export const Header = ({ userSession }: HeaderProps) => {
     },
   ];
 
-  const navLinks = userSession ? navLinksWithSession : navLinksWithoutSession;
+  const navLinks = currentSession
+    ? navLinksWithSession
+    : navLinksWithoutSession;
 
   return (
     <header className="bg-background mx-4 flex items-center justify-between border-b">

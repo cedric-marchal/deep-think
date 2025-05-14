@@ -2,6 +2,7 @@ import { env } from "@/src/lib/env";
 
 import type { Metadata } from "next";
 
+import { requireActiveSubscription } from "@/src/lib/auth/require-subscription";
 import { prisma } from "@/src/lib/prisma";
 import { PhilosopherSelect } from "./_components/philosopher-select";
 
@@ -10,6 +11,8 @@ export const metadata: Metadata = {
 };
 
 export default async function SelectPhilosopherPage() {
+  await requireActiveSubscription();
+
   const philosophers = await prisma.philosopher.findMany({
     orderBy: {
       name: "asc",

@@ -1,6 +1,8 @@
+import { checkActiveSubscription } from "@/src/lib/auth/require-subscription";
 import { env } from "@/src/lib/env";
 import { prisma } from "@/src/lib/prisma";
 import { notFound } from "next/navigation";
+import { SubscriptionRequired } from "../../_components/subscription-required";
 import { ChatInterface } from "./_components/chat-interface";
 
 export async function generateMetadata({
@@ -22,12 +24,30 @@ export async function generateMetadata({
   };
 }
 
-export default async function PhilosopherChatPage(props: {
-  params: Promise<{ philosopherId: string }>;
+export default async function ChatPage({
+  params: { philosopherId },
+}: {
+  params: { philosopherId: string };
 }) {
-  const params = await props.params;
+  // Dans cette page, nous avons besoin d'un comportement spécial pour les utilisateurs sans abonnement
+  // au lieu de rediriger, nous affichons un composant SubscriptionRequired
+  const { isAuthenticated, hasSubscription, user, currentSession } =
+    await checkActiveSubscription();
 
-  const philosopherId = params.philosopherId;
+  if (!isAuthenticated || !user) {
+    notFound();
+  }
+
+  if (!hasSubscription) {
+    return (
+      <div className="container py-8">
+        <SubscriptionRequired
+          hasStripeAccount={!!user.stripeCustomerId}
+          userId={currentSession!.id}
+        />
+      </div>
+    );
+  }
 
   const chat = await prisma.chat.findUnique({
     where: { id: philosopherId },
@@ -37,7 +57,7 @@ export default async function PhilosopherChatPage(props: {
   });
 
   if (!chat) {
-    notFound();
+    return notFound();
   }
 
   return (

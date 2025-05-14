@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import type { PhilosophicalEra, Prisma } from "@/prisma/generated/prisma";
 import { prisma } from "@/src/lib/prisma";
 
+import { requireAdmin } from "@/src/lib/auth/require-admin";
 import { ManagePhilosophers } from "./_components/manage-philosophers";
 import { PhilosophersFilter } from "./_components/philosophers-filter";
 import { philosophersCache } from "./search-params";
@@ -21,6 +22,8 @@ type AdminPageProps = {
 };
 
 export default async function AdminPage({ searchParams }: AdminPageProps) {
+  await requireAdmin();
+
   // Parse search params using the cache
   await philosophersCache.parse(await searchParams);
 

@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/src/components/ui/card";
-import { getUserSession } from "@/src/lib/auth-session";
+import { getCurrentSession } from "@/src/lib/auth-session";
 import { CheckCircle2 } from "lucide-react";
 import { redirect } from "next/navigation";
 
@@ -31,9 +31,9 @@ export default async function VerificationSuccessPage({
 }: {
   searchParams: { token?: string };
 }) {
-  const userSession = await getUserSession();
+  const currentSession = await getCurrentSession();
 
-  if (!userSession || !searchParams.token) {
+  if (!currentSession || !searchParams.token) {
     redirect("/sign-in");
   }
 

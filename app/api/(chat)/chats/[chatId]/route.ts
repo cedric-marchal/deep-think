@@ -1,4 +1,4 @@
-import { getUserSession } from "@/src/lib/auth-session";
+import { getCurrentSession } from "@/src/lib/auth-session";
 import { prisma } from "@/src/lib/prisma";
 import {
   BadRequestError,
@@ -21,9 +21,9 @@ export async function PATCH(
   { params }: { params: { chatId: string } },
 ) {
   try {
-    const userSession = await getUserSession();
+    const currentSession = await getCurrentSession();
 
-    if (!userSession) {
+    if (!currentSession) {
       throw new UnauthorizedError("Unauthorized");
     }
 
@@ -47,7 +47,7 @@ export async function PATCH(
       throw new NotFoundError("Chat not found");
     }
 
-    if (existingChat.userId !== userSession.id) {
+    if (existingChat.userId !== currentSession.user.id) {
       throw new UnauthorizedError(
         "You don't have permission to edit this chat",
       );
@@ -83,9 +83,9 @@ export async function DELETE(
   { params }: { params: { chatId: string } },
 ) {
   try {
-    const userSession = await getUserSession();
+    const currentSession = await getCurrentSession();
 
-    if (!userSession) {
+    if (!currentSession) {
       throw new UnauthorizedError("Unauthorized");
     }
 
@@ -109,7 +109,7 @@ export async function DELETE(
       throw new NotFoundError("Chat not found");
     }
 
-    if (existingChat.userId !== userSession.id) {
+    if (existingChat.userId !== currentSession.user.id) {
       throw new UnauthorizedError(
         "You don't have permission to delete this chat",
       );

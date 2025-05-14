@@ -37,6 +37,11 @@ const PhilosopherSchema = z.object({
   era: z.nativeEnum(PhilosophicalEra, {
     errorMap: () => ({ message: "Era is required" }),
   }),
+  systemPrompt: z
+    .string()
+    .min(50, "System prompt must be at least 50 characters")
+    .max(2000, "System prompt cannot exceed 2000 characters")
+    .trim(),
 });
 
 export async function POST(request: Request) {
@@ -48,6 +53,7 @@ export async function POST(request: Request) {
       name: formData.get("name"),
       description: formData.get("description"),
       era: formData.get("era"),
+      systemPrompt: formData.get("systemPrompt"),
     });
 
     const slug = slugify(philosopherBody.name);
@@ -71,6 +77,7 @@ export async function POST(request: Request) {
         imageUrl: philosopherBody.imageUrl,
         name: philosopherBody.name,
         slug,
+        systemPrompt: philosopherBody.systemPrompt,
         description: philosopherBody.description,
         era: philosopherBody.era,
       },
@@ -82,7 +89,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json(philosopher);
   } catch (error: unknown) {
-    console.error(error);
     return handleApiError(error);
   }
 }

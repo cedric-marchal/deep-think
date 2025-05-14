@@ -5,7 +5,7 @@ import type { WebPage, WithContext } from "schema-dts";
 
 import Script from "next/script";
 
-import { getUserSession } from "@/src/lib/auth-session";
+import { getCurrentSession } from "@/src/lib/auth-session";
 import { redirect } from "next/navigation";
 import { ForgotPasswordForm } from "./_components/forgot-password-form";
 
@@ -48,9 +48,9 @@ export const metadata: Metadata = {
 };
 
 export default async function ForgotPasswordPage() {
-  const userSession = await getUserSession();
+  const currentSession = await getCurrentSession();
 
-  if (userSession) {
+  if (currentSession) {
     redirect("/dashboard/chat");
   }
 

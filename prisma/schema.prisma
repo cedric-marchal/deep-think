@@ -9,17 +9,22 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  image         String?
-  name          String?
-  email         String    @unique
-  emailVerified Boolean
-  role          UserRole  @default(CUSTOMER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  chats         Chat[]
+  id                       String    @id @default(cuid())
+  image                    String?
+  name                     String?
+  email                    String    @unique
+  emailVerified            Boolean
+  role                     UserRole  @default(CUSTOMER)
+  stripeCustomerId         String?   @unique
+  stripeSubscriptionId     String?
+  stripeSubscriptionStatus String?
+  hasActiveSubscription    Boolean   @default(false)
+  subscriptionUpdatedAt    DateTime?
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+  sessions                 Session[]
+  accounts                 Account[]
+  chats                    Chat[]
 
   @@map("user")
 }
@@ -75,15 +80,16 @@ enum UserRole {
 }
 
 model Philosopher {
-  id          String           @id @default(cuid())
-  name        String           @unique
-  slug        String           @unique
-  era         PhilosophicalEra
-  imageUrl    String
-  description String
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  chats       Chat[]
+  id           String           @id @default(cuid())
+  name         String           @unique
+  slug         String           @unique
+  era          PhilosophicalEra
+  imageUrl     String
+  description  String
+  systemPrompt String           @db.Text
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  chats        Chat[]
 }
 
 enum PhilosophicalEra {

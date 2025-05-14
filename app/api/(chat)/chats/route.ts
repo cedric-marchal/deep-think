@@ -1,4 +1,4 @@
-import { getUserSession } from "@/src/lib/auth-session";
+import { getCurrentSession } from "@/src/lib/auth-session";
 import { prisma } from "@/src/lib/prisma";
 import {
   BadRequestError,
@@ -15,9 +15,9 @@ const ChatSchema = z.object({
 
 export async function POST(request: Request) {
   try {
-    const userSession = await getUserSession();
+    const currentSession = await getCurrentSession();
 
-    if (!userSession) {
+    if (!currentSession) {
       throw new UnauthorizedError("Unauthorized");
     }
 
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
       data: {
         name: `Discussion with ${philosopher.name}`,
         philosopherId: chatBody.philosopherId,
-        userId: userSession.id,
+        userId: currentSession.user.id,
       },
     });
 
