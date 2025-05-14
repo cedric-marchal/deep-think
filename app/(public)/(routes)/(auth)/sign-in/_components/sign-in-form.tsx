@@ -60,7 +60,7 @@ export const SignInForm = () => {
             Sign in
           </CardTitle>
           <CardDescription className="text-muted-foreground text-center">
-            Sign in to your account to access all our features
+            Sign in to your account
           </CardDescription>
         </CardHeader>
         <CardContent>

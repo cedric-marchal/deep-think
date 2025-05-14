@@ -1,11 +1,15 @@
 "use client";
 
 import {
+  Bell,
   BookOpen,
+  CreditCard,
   Edit,
+  LogOut,
   MessageCircleIcon,
   MoreHorizontal,
   Plus,
+  Settings,
   SidebarIcon,
   Trash2,
   User2,
@@ -348,16 +352,60 @@ export const ProtectedSidebar = ({ chats }: ProtectedSidebarProps) => {
         <SidebarFooter className="mt-auto border-t">
           <SidebarMenu className="space-y-1">
             <SidebarMenuItem className="h-9">
-              <SidebarMenuButton
-                type="button"
-                onClick={handleSignOut}
-                className="flex h-full items-center"
-              >
-                <User2 className="h-4 w-4" />
-                <span className={sidebarState === "collapsed" ? "hidden" : ""}>
-                  Profil
-                </span>
-              </SidebarMenuButton>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton
+                    type="button"
+                    className="flex h-full w-full items-center"
+                  >
+                    <User2 className="h-4 w-4" />
+                    <span
+                      className={sidebarState === "collapsed" ? "hidden" : ""}
+                    >
+                      Profile
+                    </span>
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56">
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/dashboard/settings"
+                      className="flex items-center"
+                    >
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Settings</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="#" className="flex items-center">
+                      <User2 className="mr-2 h-4 w-4" />
+                      <span>Account</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/dashboard/billing"
+                      className="flex items-center"
+                    >
+                      <CreditCard className="mr-2 h-4 w-4" />
+                      <span>Billing</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="#" className="flex items-center">
+                      <Bell className="mr-2 h-4 w-4" />
+                      <span>Notifications</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={handleSignOut}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <LogOut className="text-destructive mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
@@ -429,32 +477,3 @@ export const ProtectedSidebar = ({ chats }: ProtectedSidebarProps) => {
     </>
   );
 };
-/*
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              className="size-7 cursor-pointer"
-                            >
-                              <MoreHorizontal className="h-3.5 w-3.5" />
-                              <span className="sr-only">Actions</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() => handleOpenEditDialog(chat)}
-                            >
-                              <Edit className="mr-2 h-3.5 w-3.5" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleOpenDeleteDialog(chat)}
-                            >
-                              <Trash2 className="mr-2 h-3.5 w-3.5" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                        */

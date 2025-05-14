@@ -55,7 +55,7 @@ export async function requireActiveSubscription() {
   }
 
   if (!hasSubscription) {
-    redirect("/dashboard/checkout");
+    redirect("/dashboard/billing");
   }
 
   return { user, currentSession };

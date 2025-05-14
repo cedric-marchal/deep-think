@@ -11,7 +11,8 @@ datasource db {
 model User {
   id                       String    @id @default(cuid())
   image                    String?
-  name                     String?
+  name                     String    @unique
+  slug                     String?   @unique
   email                    String    @unique
   emailVerified            Boolean
   role                     UserRole  @default(CUSTOMER)
@@ -22,9 +23,9 @@ model User {
   subscriptionUpdatedAt    DateTime?
   createdAt                DateTime  @default(now())
   updatedAt                DateTime  @updatedAt
-  sessions                 Session[]
-  accounts                 Account[]
   chats                    Chat[]
+  accounts                 Account[]
+  sessions                 Session[]
 
   @@map("user")
 }
@@ -32,7 +33,7 @@ model User {
 model Session {
   id        String   @id
   expiresAt DateTime
-  token     String
+  token     String   @unique
   createdAt DateTime
   updatedAt DateTime
   ipAddress String?
@@ -40,7 +41,6 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
   @@map("session")
 }
 
@@ -49,7 +49,6 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -59,6 +58,7 @@ model Account {
   password              String?
   createdAt             DateTime
   updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("account")
 }
@@ -74,11 +74,6 @@ model Verification {
   @@map("verification")
 }
 
-enum UserRole {
-  ADMIN
-  CUSTOMER
-}
-
 model Philosopher {
   id           String           @id @default(cuid())
   name         String           @unique
@@ -86,29 +81,10 @@ model Philosopher {
   era          PhilosophicalEra
   imageUrl     String
   description  String
-  systemPrompt String           @db.Text
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
+  systemPrompt String
   chats        Chat[]
-}
-
-enum PhilosophicalEra {
-  ANCIENT_EAST // 3000-500 BCE (Early Eastern Philosophy)
-  PRE_SOCRATIC // 600-400 BCE (Before Socrates)
-  CLASSICAL_GREEK // 470-322 BCE (Socrates, Plato, Aristotle)
-  HELLENISTIC // 322-31 BCE (Epicureans, Stoics, Skeptics)
-  ROMAN // 31 BCE-476 CE
-  MEDIEVAL_EARLY // 476-1000 (Early Church Fathers, Byzantine)
-  MEDIEVAL_HIGH // 1000-1300 (Scholasticism, Islamic Golden Age)
-  MEDIEVAL_LATE // 1300-1453 (Nominalism, Natural philosophy)
-  RENAISSANCE // 1453-1600 (Humanism, Scientific Revolution)
-  EARLY_MODERN // 1600-1750 (Rationalism, Empiricism)
-  ENLIGHTENMENT // 1750-1800 (Age of Reason)
-  ROMANTICISM // 1800-1850 (German Idealism, Romanticism)
-  LATE_MODERN // 1850-1920 (Marxism, Existentialism, Pragmatism)
-  EARLY_CONTEMPORARY // 1920-1960 (Logical Positivism, Phenomenology)
-  POSTMODERN // 1960-2000 (Deconstruction, Post-structuralism)
-  CONTEMPORARY // 2000-present
 }
 
 model Chat {
@@ -118,8 +94,8 @@ model Chat {
   philosopherId String
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   philosopher   Philosopher   @relation(fields: [philosopherId], references: [id], onDelete: Cascade)
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages      ChatMessage[]
 }
 
@@ -131,6 +107,30 @@ model ChatMessage {
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
   chat      Chat            @relation(fields: [chatId], references: [id], onDelete: Cascade)
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+}
+
+enum PhilosophicalEra {
+  ANCIENT_EAST
+  PRE_SOCRATIC
+  CLASSICAL_GREEK
+  HELLENISTIC
+  ROMAN
+  MEDIEVAL_EARLY
+  MEDIEVAL_HIGH
+  MEDIEVAL_LATE
+  RENAISSANCE
+  EARLY_MODERN
+  ENLIGHTENMENT
+  ROMANTICISM
+  LATE_MODERN
+  EARLY_CONTEMPORARY
+  POSTMODERN
+  CONTEMPORARY
 }
 
 enum ChatMessageRole {

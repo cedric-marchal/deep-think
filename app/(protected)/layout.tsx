@@ -33,7 +33,7 @@ export default async function ProtectedLayout({
     <SidebarProvider defaultOpen>
       <div className="flex h-full w-full">
         <ProtectedSidebar chats={chats} />
-        <div className="flex-1 overflow-auto p-4">{children}</div>
+        <div className="flex-1 overflow-auto px-8">{children}</div>
       </div>
     </SidebarProvider>
   );

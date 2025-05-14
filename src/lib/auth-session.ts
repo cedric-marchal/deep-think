@@ -30,10 +30,6 @@ export type AuthSession = {
   user: UserInfo;
 } | null;
 
-/**
- * Retrieves the current user session from the authentication system
- * @returns The complete session object or null if not authenticated
- */
 export const getCurrentSession = async (): Promise<AuthSession> => {
   try {
     return await auth.api.getSession({

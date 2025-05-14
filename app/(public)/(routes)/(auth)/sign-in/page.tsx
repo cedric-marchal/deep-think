@@ -5,8 +5,7 @@ import type { WebPage, WithContext } from "schema-dts";
 
 import Script from "next/script";
 
-import { getCurrentSession } from "@/src/lib/auth-session";
-import { redirect } from "next/navigation";
+import { redirectIfAuthenticated } from "@/src/lib/auth/redirect-if-authenticated";
 import { SignInForm } from "./_components/sign-in-form";
 
 export const metadata: Metadata = {
@@ -45,11 +44,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SignInPage() {
-  const currentSession = await getCurrentSession();
-
-  if (currentSession) {
-    redirect("/dashboard/chat");
-  }
+  await redirectIfAuthenticated();
 
   const schemaOrg: WithContext<WebPage> = {
     "@context": "https://schema.org",

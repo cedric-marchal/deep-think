@@ -4,7 +4,8 @@ import { stripe } from "@/src/lib/stripe";
 
 import { ResetPasswordEmail } from "@/src/components/emails/reset-password-email";
 import { resend } from "@/src/lib/resend";
-import { betterAuth } from "better-auth";
+import { slugify } from "@/src/utils/string/slugify";
+import { betterAuth, User } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { VerifyEmail } from "../components/emails/verify-email-email";
@@ -47,7 +48,7 @@ export const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
-        after: async (user) => {
+        after: async (user: User) => {
           try {
             const customer = await stripe.customers.create({
               email: user.email,
@@ -64,6 +65,7 @@ export const auth = betterAuth({
             await prisma.user.update({
               where: { id: user.id },
               data: {
+                slug: slugify(user.name),
                 stripeCustomerId: customer.id,
               },
             });

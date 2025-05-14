@@ -30,12 +30,20 @@ export const SignUpForm = () => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    if (!name || !name.trim()) {
+      toast.error("Full name is required");
+      return;
+    }
 
     await signUp.email(
       {
-        email: formData.get("email") as string,
-        password: formData.get("password") as string,
-        name: formData.get("name") as string,
+        email,
+        password,
+        name,
       },
       {
         onRequest: () => {
@@ -43,8 +51,8 @@ export const SignUpForm = () => {
         },
         onSuccess: async () => {
           await signIn.email({
-            email: formData.get("email") as string,
-            password: formData.get("password") as string,
+            email,
+            password,
           });
 
           toast.success("Verification email sent");
@@ -66,15 +74,14 @@ export const SignUpForm = () => {
             Sign up
           </CardTitle>
           <CardDescription className="text-muted-foreground text-center">
-            Create your account and access all our features to help you move to
-            Switzerland.
+            Create your account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-sm font-medium">
-                Full name
+                Full name <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <User className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
@@ -83,6 +90,7 @@ export const SignUpForm = () => {
                   type="text"
                   name="name"
                   placeholder="John Doe"
+                  required
                   className="bg-card border-border pl-10"
                 />
               </div>
@@ -90,7 +98,7 @@ export const SignUpForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium">
-                Email
+                Email <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Mail className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
@@ -99,6 +107,7 @@ export const SignUpForm = () => {
                   type="email"
                   name="email"
                   placeholder="john.doe@email.com"
+                  required
                   className="bg-card border-border pl-10"
                 />
               </div>
@@ -106,7 +115,7 @@ export const SignUpForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="password" className="text-sm font-medium">
-                Password
+                Password <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Lock className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
@@ -115,6 +124,7 @@ export const SignUpForm = () => {
                   type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="••••••••"
+                  required
                   className="bg-card border-border pr-10 pl-10"
                 />
                 <button
