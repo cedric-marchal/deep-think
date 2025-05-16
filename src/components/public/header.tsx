@@ -4,7 +4,7 @@ import { cn } from "@/src/lib/utils";
 import { ModeToggle } from "@/src/components/mode-toggle";
 import { MobileMenu } from "./mobile-menu";
 
-import type { currentSession } from "@/src/lib/auth-session";
+import type { Session } from "better-auth";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +15,7 @@ type NavLink = {
 };
 
 type HeaderProps = {
-  currentSession: currentSession | null;
+  currentSession: Session | null;
 };
 
 export const Header = ({ currentSession }: HeaderProps) => {

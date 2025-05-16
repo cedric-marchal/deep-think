@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import Script from "next/script";
 import type { WebPage, WithContext } from "schema-dts";
 
-import { ResetPasswordForm } from "@/src/components/public/auth/reset-password/reset-password-form";
+import { ResetPasswordForm } from "@/src/components/public/auth/reset-password-form";
 import { redirectIfAuthenticated } from "@/src/lib/auth/redirect-if-authenticated";
 
 export const metadata: Metadata = {

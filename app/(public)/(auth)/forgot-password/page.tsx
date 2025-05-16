@@ -5,7 +5,7 @@ import type { WebPage, WithContext } from "schema-dts";
 
 import Script from "next/script";
 
-import { ForgotPasswordForm } from "@/src/components/public/auth/forgot-password/forgot-password-form";
+import { ForgotPasswordForm } from "@/src/components/public/auth/forgot-password-form";
 import { redirectIfAuthenticated } from "@/src/lib/auth/redirect-if-authenticated";
 
 export const metadata: Metadata = {

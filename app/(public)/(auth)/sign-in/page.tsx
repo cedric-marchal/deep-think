@@ -5,7 +5,7 @@ import type { WebPage, WithContext } from "schema-dts";
 
 import Script from "next/script";
 
-import { SignInForm } from "@/src/components/public/auth/sign-in/sign-in-form";
+import { SignInForm } from "@/src/components/public/auth/sign-in-form";
 import { redirectIfAuthenticated } from "@/src/lib/auth/redirect-if-authenticated";
 
 export const metadata: Metadata = {
