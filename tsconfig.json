@@ -27,7 +27,8 @@
     "**/*.tsx",
     "next-env.d.ts",
     ".next/types/**/*.ts",
-    "prisma/seed.js"
+    "prisma/seed.js",
+    " scripts/move-components.js"
   ],
   "exclude": ["node_modules"]
 }

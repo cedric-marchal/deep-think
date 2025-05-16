@@ -1,6 +1,6 @@
+import { Footer } from "@/src/components/public/footer";
+import { Header } from "@/src/components/public/header";
 import { getCurrentSession } from "@/src/lib/auth-session";
-import { Footer } from "./_components/footer";
-import { Header } from "./_components/header";
 
 import type { ReactNode } from "react";
 

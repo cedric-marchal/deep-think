@@ -1,9 +1,10 @@
+import { ProtectedSidebar } from "@/src/components/protected/protected-sidebar";
 import { SidebarProvider } from "@/src/components/ui/sidebar";
-import { ProtectedSidebar } from "./_components/protected-sidebar";
 
 import { getCurrentSession } from "@/src/lib/auth-session";
 import { prisma } from "@/src/lib/prisma";
 import { redirect } from "next/navigation";
+
 import type { ReactNode } from "react";
 
 export default async function ProtectedLayout({

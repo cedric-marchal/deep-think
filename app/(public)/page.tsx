@@ -5,14 +5,13 @@ import type { WebSite } from "schema-dts";
 
 import Script from "next/script";
 
+import { CtaSection } from "@/src/components/public/home/cta-section";
+import { FeaturedPhilosophers } from "@/src/components/public/home/featured-philosophers";
+import { FeaturesSection } from "@/src/components/public/home/features-section";
+import { HeroSection } from "@/src/components/public/home/hero-section";
+import { PricingSection } from "@/src/components/public/home/pricing-section";
+import { TestimonialsSection } from "@/src/components/public/home/testimonials-section";
 import { prisma } from "@/src/lib/prisma";
-
-import { CtaSection } from "./_components/home/cta-section";
-import { FeaturedPhilosophers } from "./_components/home/featured-philosophers";
-import { FeaturesSection } from "./_components/home/features-section";
-import { HeroSection } from "./_components/home/hero-section";
-import { PricingSection } from "./_components/home/pricing-section";
-import { TestimonialsSection } from "./_components/home/testimonials-section";
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_BASE_URL),
